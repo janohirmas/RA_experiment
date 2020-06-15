@@ -1,0 +1,37 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+    Instructions
+{% endblock %}
+
+{% block content %}
+<body>
+    <div class="before_practice">
+        <p>In each trial you will see two values (gains and losses) that will periodically appear on the screen.</p>
+        <p>These values are Experimental Currency Unit (ECU). 1 ECU = 0.19 EUR. </p>
+        <p>You have an equal chance (50%) to either win the gain value or loose the loss value. The loss value has the "-" sign.</p>
+        <p>Your task is to make a decision after the presentation of the values. Press <b>"a"</b> to accept the gamble or <b>"l"</b> to reject it.</p>
+        <p>In the end of the experiment, <b>only one</b> trial where you have accepted the gamble will affect your final payoff.</p>
+        <p>The first {{Constants.num_practice_rounds}} trials are for practice so you will not gain or lose any money.</p>
+    </div>
+    <div class="after_practice">
+        <p>Good job!</p>
+        <p>Now the real trials will begin.</p>
+        <p>Remember to press <b>"a"</b> to accept the gamble or <b>"l"</b> to reject it.</p>
+        <p>Good luck!</p>
+    </div>
+<input type="hidden" id="rand_int" name="rand_int"/>
+</body>
+<script>
+    var rand_int = Math.floor(Math.random() * 1000)
+    $("#rand_int").val(rand_int);
+    {% if instruction_type == 0 %}
+    $(".after_practice").hide();
+    {% else %}
+    $(".before_practice").hide()
+    {% endif %}
+</script>
+    {% next_button %}
+
+{% endblock %}

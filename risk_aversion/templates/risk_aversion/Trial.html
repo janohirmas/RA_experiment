@@ -1,0 +1,169 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+{% endblock %}
+
+{% block content %}
+
+<style>
+
+/* Need this part to hide the debug info table in the bottom during the demo */
+.hide_debug {
+    width: 100%;
+    height: 2000px;
+}
+body {
+    background-color: black;
+}
+
+.coin{
+    width:100%
+}
+
+/* Container holding the image and the text */
+.container {
+    position: relative;
+    text-align: center;
+}
+
+.coins_table {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    text-align: center;
+}
+
+.values_left {
+    color: white;
+    font-size: calc((1em + 1vw)*1.5);
+    position: absolute;
+    top: 50%;
+    left: 60%;
+    transform: translate(-50%, -50%);
+}
+
+.values_right {
+    color: white;
+    position: absolute;
+    font-size: calc((1em + 1vw)*1.5);
+    top: 50%;
+    left: 40%;
+    transform: translate(-50%, -50%);
+}
+
+.cross_fix {
+    color: white;
+    font-size: calc((1em + 1vw)*1.5);
+
+}
+
+.next_button {
+    visibility: hidden
+}
+
+</style>
+
+<body>
+    <div class="hide_debug">
+        <table class="coins_table">
+            <tr>
+                <td>
+                    <div class = "container" id="left_container">
+                        <img class="coin" src="{% static 'global/experiment_pics/coin_left.png' %}">
+                        <p class="values_left"><span id="left_value"></span></p>
+                    </div>
+                </td>
+                <td>
+                    <p class="cross_fix" id="cross_fix">+</p>
+                </td>
+                <td>
+                    <div class = "container" id="right_container">
+                        <img class="coin" src="{% static 'global/experiment_pics/coin_right.png' %}">
+                        <p class="values_right"><span id="right_value"></span></p>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <button class="next_button btn btn-primary btn-large" id="Button">Next</button>
+</body>
+
+<script language = "javascript" type = "text/javascript">
+    document.getElementById("left_container").style.visibility = "hidden";
+    document.getElementById("right_container").style.visibility = "hidden";
+    var wait_time = (Math.random()*2 + 1)*1000
+    setTimeout(function(){ document.getElementById("cross_fix").style.visibility = "hidden";}, wait_time);
+
+    // define first side to appear (left or right)
+    var sides = ["left", "right"];
+    var side_first_to_appear = sides[Math.floor(Math.random() * sides.length)];
+    if (side_first_to_appear.localeCompare("left") === 0) {
+    var side_second_to_appear = "right";
+    } else {
+    var side_second_to_appear = "left";
+    }
+    var first_container = side_first_to_appear+"_container"
+    var second_container = side_second_to_appear+"_container"
+
+    // define first value that appears (loss or gain)
+    var val_first_to_appear = js_vars.first_fix_value
+    if (val_first_to_appear.localeCompare("loss") === 0) {
+        var val_second_to_appear = "gain";
+    } else {
+        var val_second_to_appear = "loss";
+    }
+
+    // put first value to appear in a firts container
+    if (side_first_to_appear.localeCompare("left") === 0  && val_first_to_appear.localeCompare("gain") === 0){
+        document.getElementById("left_value").innerHTML = {{gain_value}}
+        document.getElementById("right_value").innerHTML = {{lose_value}}
+    } else if (side_first_to_appear.localeCompare("left") === 0  && val_first_to_appear.localeCompare("loss") === 0){
+        document.getElementById("left_value").innerHTML = {{lose_value}}
+        document.getElementById("right_value").innerHTML = {{gain_value}}
+    } else if (side_first_to_appear.localeCompare("right") === 0  && val_first_to_appear.localeCompare("gain") === 0){
+        document.getElementById("left_value").innerHTML = {{lose_value}}
+        document.getElementById("right_value").innerHTML = {{gain_value}}
+    } else if (side_first_to_appear.localeCompare("right") === 0  && val_first_to_appear.localeCompare("loss") === 0){
+        document.getElementById("left_value").innerHTML = {{gain_value}}
+        document.getElementById("right_value").innerHTML = {{lose_value}}
+    }
+
+    // define the number of blinks (ADD WHEN NEW ARRIVE)
+    var time_gains = [{{gain_time_1}}, {{gain_time_2}}, {{gain_time_3}}, {{gain_time_4}}, {{gain_time_5}}];
+    var time_losses = [{{lose_time_1}}, {{lose_time_2}}, {{lose_time_3}}, {{lose_time_4}}, {{lose_time_5}}];
+
+
+    var max_blinks_num = time_gains.length;
+    var blinks_num = 0;
+    for (var i = 0; i < max_blinks_num; i++){
+        if (time_gains[i] != 0 || time_losses[i] != 0){
+            blinks_num++;
+        }
+    }
+    var add_wait_time = 0;
+    for (var i = 0; i < blinks_num; i++){
+        setTimeout(function(){ document.getElementById(first_container).style.visibility = "visible";}, wait_time)
+        if (val_first_to_appear.localeCompare("gain") === 0) {
+            wait_time = wait_time + time_gains[i]*1000;
+        } else {
+            wait_time = wait_time + time_losses[i]*1000;
+        }
+        setTimeout(function(){ document.getElementById(first_container).style.visibility = "hidden";}, wait_time)
+        setTimeout(function(){ document.getElementById(second_container).style.visibility = "visible";}, wait_time)
+        if (val_first_to_appear.localeCompare("gain") === 0) {
+            wait_time = wait_time + time_losses[i]*1000;
+        } else {
+            wait_time = wait_time + time_gains[i]*1000;
+        }
+        setTimeout(function(){ document.getElementById(second_container).style.visibility = "hidden";}, wait_time)
+    }
+    var Button = document.getElementById("Button");
+    setTimeout(function(){Button.click() ;}, wait_time)
+
+
+
+</script>
+{% endblock %}

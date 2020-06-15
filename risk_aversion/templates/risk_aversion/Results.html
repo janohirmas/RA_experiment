@@ -1,0 +1,24 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+    Thank you!
+{% endblock %}
+
+{% block content %}
+    Your final result is <var id="ECU_won"></var> ECU.
+    Overall, you have won <var id="final_prize"></var> EUR, including the initial 10 EUR.
+    {% next_button %}
+    <input type="hidden" id="lottery_result" name="lottery_result"/>
+
+<script>
+    var lottery_result = js_vars.lottery_result;
+    $("#lottery_result").val(lottery_result);
+    document.getElementById('ECU_won').innerHTML = lottery_result.toString();;
+    var euro_won = lottery_result/5.4 + 10;
+    euro_won = euro_won.toFixed(2);
+    document.getElementById('final_prize').innerHTML = euro_won.toString();;
+</script>
+{% endblock %}
+
+

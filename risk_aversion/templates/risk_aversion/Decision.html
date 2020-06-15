@@ -1,0 +1,76 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+{% endblock %}
+
+{% block content %}
+<style>
+
+
+/* Need this part to hide the debug info table in the bottom during the demo */
+.hide_debug {
+    width: 100%;
+    height: 2000px;
+}
+
+body {
+    background-color: black;
+}
+
+.text {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    text-align: center;
+    font-size: calc((1em + 1vw)*1.5);
+    color: white;
+}
+
+.next_button {
+    visibility: hidden
+}
+</style>
+
+<body>
+    <div class="hide_debug">
+        <p class="text" id="question">Do you accept the gamble?</p>
+    </div>
+    <button class="next_button btn btn-primary btn-large" id="Button">Next</button>
+    <input type="hidden" id="decision" name="decision"/>
+    <input type="hidden" id="ECU" name="ECU"/>
+    <input type="hidden" id="gamble_result" name="gamble_result"/>
+
+</body>
+
+<script language = "javascript" type = "text/javascript">
+
+    var wait_time = 6000
+    setTimeout(function(){ document.getElementById("question").textContent = "Respond faster";}, wait_time)
+    var Button = document.getElementById("Button");
+    setTimeout(function(){
+        $("#decision").val("None");
+        Button.click();
+    }, wait_time + 500)
+
+    $(document).keydown(function(event) {
+        var key_pressed = String.fromCharCode(event.which);
+        var q = document.getElementById("question").textContent;
+        if (key_pressed.localeCompare("a") == 0 || key_pressed.localeCompare("A") == 0 && q.localeCompare("Do you accept the gamble?") == 0){
+            document.getElementById("question").textContent = "You pressed A";
+            // register the decision
+            $("#decision").val(key_pressed);
+        setTimeout(function(){Button.click() ;}, 1000)
+        } else if (key_pressed.localeCompare("l") == 0 || key_pressed.localeCompare("L") == 0 && q.localeCompare("Do you accept the gamble?") == 0){
+            document.getElementById("question").textContent = "You pressed L";
+            $("#ECU").val(js_vars.ECU_no_change)
+            // register the decision
+            setTimeout(function(){Button.click() ;}, 1000);
+            $("#decision").val(key_pressed)
+        }
+    });
+</script>
+{{ form.decision.errors }}
+{% endblock %}
