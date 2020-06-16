@@ -8,17 +8,27 @@
 {% block content %}
 <body>
     <div class="before_practice">
-        <p>In each trial you will see two values (gains and losses) that will periodically appear on the screen.</p>
-        <p>These values are Experimental Currency Unit (ECU). 1 ECU = 0.19 EUR. </p>
-        <p>You have an equal chance (50%) to either win the gain value or loose the loss value. The loss value has the "-" sign.</p>
-        <p>Your task is to make a decision after the presentation of the values. Press <b>"a"</b> to accept the gamble or <b>"l"</b> to reject it.</p>
-        <p>In the end of the experiment, <b>only one</b> trial where you have accepted the gamble will affect your final payoff.</p>
-        <p>The first {{Constants.num_practice_rounds}} trials are for practice so you will not gain or lose any money.</p>
+<!--        <p>In each trial you will see two values (gains and losses) that will periodically appear on the screen.</p>-->
+<!--        <p>These values are Experimental Currency Unit (ECU). 1 ECU = 0.19 EUR. </p>-->
+<!--        <p>You have an equal chance (50%) to either win the gain value or loose the loss value. The loss value has the "-" sign.</p>-->
+<!--        <p>Your task is to make a decision after the presentation of the values.</p>-->
+<!--        <p>Press <b>"↑" (upwards arrow)</b> to accept the gamble or <b>"↓" (downwards arrow)</b> to reject it.</p>-->
+<!--        <p>In the end of the experiment, <b>only one</b> trial where you have accepted the gamble will affect your final payoff, which also includes unconditional 10 EUR.</p>-->
+<!--        <p>The first {{Constants.num_practice_rounds}} trials are for practice so you will not gain or lose any money.</p>-->
+        <p>In each trial you will see two values (gains and losses) that will periodically appear on the screen. These values are Experimental Currency Unit (ECU). 1 ECU = 0.19 EUR. You have an equal chance (50%) to either win the gain value or loose the loss value. The loss value has the "-" sign.</p>
+        <p>Your task is to make a decision after the presentation of the values. Press <b>"↑" (upwards arrow)</b> to accept the gamble or <b>"↓" (downwards arrow)</b> to reject it. In the end of the experiment, <b>only one</b> trial where you have accepted the gamble will affect your final payoff, which also includes unconditional 10 EUR. The first {{Constants.num_practice_rounds}} trials are for practice so you will not gain or lose any money. </p>
+        <h4>Please, answer the following questions before proceeding:</h4>
+        <form>
+          <label for="q1">What button should you press to accept the gamble?</label>
+          <input type="text" id="q1" name="q1"><br><br>
+          <label for="q2">How many accepted gambles will affect your final payoff?</label>
+          <input id="q2" name="q2"><br><br>
+        </form>
     </div>
     <div class="after_practice">
         <p>Good job!</p>
         <p>Now the real trials will begin.</p>
-        <p>Remember to press <b>"a"</b> to accept the gamble or <b>"l"</b> to reject it.</p>
+        <p>Remember to press <b>"↑" (upwards arrow)</b> to accept the gamble or <b>"↓" (downwards arrow)</b> to reject it.</p>
         <p>Good luck!</p>
     </div>
 <input type="hidden" id="rand_int" name="rand_int"/>
@@ -30,6 +40,8 @@
     $(".after_practice").hide();
     {% else %}
     $(".before_practice").hide()
+    $("#q1").val("None");
+    $("#q2").val("None");
     {% endif %}
 </script>
     {% next_button %}

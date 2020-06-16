@@ -5,7 +5,7 @@ from .models import Constants
 
 class Instructions(Page):
     form_model = 'player'
-    form_fields = ['rand_int']
+    form_fields = ['rand_int', 'q1', 'q2']
     def vars_for_template(self):
         if self.round_number == 1:
             instruction_type = 0

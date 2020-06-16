@@ -37,6 +37,7 @@ body {
 <body>
     <div class="hide_debug">
         <p class="text" id="question">Do you accept the gamble?</p>
+        <p class="text" id="hint" style="top: 60%; font-size: calc((1em + 1vw)"> Press ↑ to accept and ↓ to reject the gamble</p>
     </div>
     <button class="next_button btn btn-primary btn-large" id="Button">Next</button>
     <input type="hidden" id="decision" name="decision"/>
@@ -46,31 +47,32 @@ body {
 </body>
 
 <script language = "javascript" type = "text/javascript">
-
+    document.getElementById("hint").style.visibility = "hidden";
     var wait_time = 6000
-    setTimeout(function(){ document.getElementById("question").textContent = "Respond faster";}, wait_time)
+    setTimeout(function(){ document.getElementById("question").textContent = "Respond faster";
+                            document.getElementById("hint").style.visibility = "visible";}, wait_time)
     var Button = document.getElementById("Button");
     setTimeout(function(){
-        $("#decision").val("None");
         Button.click();
-    }, wait_time + 500)
+    }, wait_time + 3000)
 
-    $(document).keydown(function(event) {
-        var key_pressed = String.fromCharCode(event.which);
+    document.onkeydown = checkKey;
+    function checkKey(e) {
+        e = e || window.event;
         var q = document.getElementById("question").textContent;
-        if (key_pressed.localeCompare("a") == 0 || key_pressed.localeCompare("A") == 0 && q.localeCompare("Do you accept the gamble?") == 0){
-            document.getElementById("question").textContent = "You pressed A";
+        if (e.keyCode === 38 && q.localeCompare("Do you accept the gamble?") == 0){
+            document.getElementById("question").textContent = "You pressed ↑";
             // register the decision
-            $("#decision").val(key_pressed);
+            $("#decision").val(1);
         setTimeout(function(){Button.click() ;}, 1000)
-        } else if (key_pressed.localeCompare("l") == 0 || key_pressed.localeCompare("L") == 0 && q.localeCompare("Do you accept the gamble?") == 0){
-            document.getElementById("question").textContent = "You pressed L";
+        } else if (e.keyCode === 40 && q.localeCompare("Do you accept the gamble?") == 0){
+            document.getElementById("question").textContent = "You pressed ↓";
             $("#ECU").val(js_vars.ECU_no_change)
             // register the decision
             setTimeout(function(){Button.click() ;}, 1000);
-            $("#decision").val(key_pressed)
+            $("#decision").val(0)
         }
-    });
+    }
 </script>
 {{ form.decision.errors }}
 {% endblock %}

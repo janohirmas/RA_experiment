@@ -36,10 +36,12 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
+    q1 = models.LongStringField()
+    q2 = models.LongStringField()
     rand_int = models.IntegerField()
     cluster = models.IntegerField()
     original_trial_num = models.IntegerField()
-    decision = models.StringField()
+    decision = models.IntegerField(blank=True)
     last_fix_condition = models.IntegerField()
     first_fix_value = models.StringField()
     last_fix_value = models.StringField()
@@ -91,8 +93,8 @@ class Player(BasePlayer):
         # treatments table
         clusters = [0, 1]  # 0 - fast scanning (1 or 2 fixations), 1 - long fixations (3,4 or 5 fix)
         last_fix_conditions = [-1, 0, 1]  # -1 - shorter, 0 - equal, 1 - longer
-        lose_values = [-21, -23, -25]
-        gain_values = [22, 24, 26]
+        lose_values = [-13, -19, -27]
+        gain_values = [20, 30, 38]
         last_fix_values = ['gain', 'loss']
         trial_time_clus0 = 1.365
         trial_time_clus1 = 2.110
