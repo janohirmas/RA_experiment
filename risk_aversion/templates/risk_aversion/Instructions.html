@@ -15,9 +15,11 @@
 <!--        <p>Press <b>"↑" (upwards arrow)</b> to accept the gamble or <b>"↓" (downwards arrow)</b> to reject it.</p>-->
 <!--        <p>In the end of the experiment, <b>only one</b> trial where you have accepted the gamble will affect your final payoff, which also includes unconditional 10 EUR.</p>-->
 <!--        <p>The first {{Constants.num_practice_rounds}} trials are for practice so you will not gain or lose any money.</p>-->
-        <p>In each trial you will see two values (gains and losses) that will periodically appear on the screen. These values are Experimental Currency Unit (ECU). 1 ECU = 0.19 EUR. You have an equal chance (50%) to either win the gain value or loose the loss value. The loss value has the "-" sign.</p>
-        <p>Your task is to make a decision after the presentation of the values. Press <b>"↑" (upwards arrow)</b> to accept the gamble or <b>"↓" (downwards arrow)</b> to reject it. In the end of the experiment, <b>only one</b> trial where you have accepted the gamble will affect your final payoff, which also includes unconditional 10 EUR. The first {{Constants.num_practice_rounds}} trials are for practice so you will not gain or lose any money. </p>
-        <h4>Please, answer the following questions before proceeding:</h4>
+        <p>In each trial you will see two values that will periodically appear on the screen. One of these values will be the potential loss (it will have the "-" sign), another one - potential gain. You will have an equal chance (50%) to either win the potential gain or loose the potential loss.</p>
+        <p>In every trial, after the demonstration of the values, you will need to make a decision whether you accept or reject the gamble with these values. Using your keyboard, press <b>"↑" (upwards arrow)</b> to accept the gamble or <b>"↓" (downwards arrow)</b> to reject it.</p>
+        <p>At the end of the experiment, <b>only one</b> accepted trial will affect your final payoff, which will also include unconditional 10 EUR. This trial will be chosen randomly from all the trials that you accepted. The first {{Constants.num_practice_rounds}} trials are for training so they will not affect your final payoff.</p>
+        <p>Values that you will see are in the Experimental Currency Units (ECU). 1 ECU = 0.19 EUR.</p>
+        <h4 style="margin-top: 50px">Please, answer the following questions before proceeding:</h4>
         <form>
           <label for="q1">What button should you press to accept the gamble?</label>
           <input type="text" id="q1" name="q1"><br><br>
