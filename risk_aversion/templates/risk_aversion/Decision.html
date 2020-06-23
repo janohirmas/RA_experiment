@@ -41,13 +41,15 @@ body {
     </div>
     <button class="next_button btn btn-primary btn-large" id="Button">Next</button>
     <input type="hidden" id="decision" name="decision"/>
-    <input type="hidden" id="ECU" name="ECU"/>
     <input type="hidden" id="gamble_result" name="gamble_result"/>
+    <input type="hidden" id="decision_time_ms" name="decision_time_ms"/>
 
 </body>
 
 <script language = "javascript" type = "text/javascript">
     document.getElementById("hint").style.visibility = "hidden";
+    var startTime, endTime;
+    t0 = start();
     var wait_time = 6000
     setTimeout(function(){ document.getElementById("question").textContent = "Respond faster";
                             document.getElementById("hint").style.visibility = "visible";}, wait_time)
@@ -64,15 +66,26 @@ body {
             document.getElementById("question").textContent = "You pressed ↑";
             // register the decision
             $("#decision").val(1);
-        setTimeout(function(){Button.click() ;}, 1000)
+            $("#decision_time_ms").val(end)
+            setTimeout(function(){Button.click() ;}, 1000)
         } else if (e.keyCode === 40 && q.localeCompare("Do you accept the gamble?") == 0){
             document.getElementById("question").textContent = "You pressed ↓";
-            $("#ECU").val(js_vars.ECU_no_change)
             // register the decision
-            setTimeout(function(){Button.click() ;}, 1000);
             $("#decision").val(0)
+            $("#decision_time_ms").val(end);
+            setTimeout(function(){Button.click() ;}, 1000);
+
         }
     }
+    function start() {
+      startTime = new Date();
+    };
+
+    function end() {
+        endTime = new Date();
+        var timeDiff = endTime - startTime; //in ms
+        return timeDiff;
+    };
 </script>
 {{ form.decision.errors }}
 {% endblock %}

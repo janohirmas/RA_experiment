@@ -62,6 +62,7 @@ class Player(BasePlayer):
     gamble_result = models.IntegerField(blank=True)
     row_number = models.IntegerField()
     lottery_result = models.IntegerField(blank=True)
+    decision_time_ms = models.IntegerField(blank= True)
 
     def lottery(self):
         values = []

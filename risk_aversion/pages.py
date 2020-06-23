@@ -53,7 +53,7 @@ class Trial(Page):
         )
 class Decision(Page):
     form_model = 'player'
-    form_fields = ['decision', 'gamble_result']
+    form_fields = ['decision', 'gamble_result', 'decision_time_ms']
     # def js_vars(self):
     #     if self.round_number > 1:
     #         current_ecu = self.player.in_round(self.round_number - 1).ECU
