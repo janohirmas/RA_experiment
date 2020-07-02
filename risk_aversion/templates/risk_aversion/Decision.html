@@ -37,11 +37,10 @@ body {
 <body>
     <div class="hide_debug">
         <p class="text" id="question">Do you accept the gamble?</p>
-        <p class="text" id="hint" style="top: 60%; font-size: calc((1em + 1vw)"> Press ↑ to accept and ↓ to reject the gamble</p>
+        <p class="text" id="hint" style="top: 60%; font-size: calc((1em + 1vw)"> Press ↑ to accept or ↓ to reject the gamble</p>
     </div>
     <button class="next_button btn btn-primary btn-large" id="Button">Next</button>
     <input type="hidden" id="decision" name="decision"/>
-    <input type="hidden" id="gamble_result" name="gamble_result"/>
     <input type="hidden" id="decision_time_ms" name="decision_time_ms"/>
 
 </body>
@@ -63,13 +62,13 @@ body {
         e = e || window.event;
         var q = document.getElementById("question").textContent;
         if (e.keyCode === 38 && q.localeCompare("Do you accept the gamble?") == 0){
-            document.getElementById("question").textContent = "You pressed ↑";
+            document.getElementById("question").textContent = "You have accepted the gamble";
             // register the decision
             $("#decision").val(1);
             $("#decision_time_ms").val(end)
             setTimeout(function(){Button.click() ;}, 1000)
         } else if (e.keyCode === 40 && q.localeCompare("Do you accept the gamble?") == 0){
-            document.getElementById("question").textContent = "You pressed ↓";
+            document.getElementById("question").textContent = "You have rejected the gamble";
             // register the decision
             $("#decision").val(0)
             $("#decision_time_ms").val(end);

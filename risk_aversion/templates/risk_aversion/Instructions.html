@@ -6,45 +6,72 @@
 {% endblock %}
 
 {% block content %}
+<style>
+    .gifs {
+        padding-bottom:50px;
+    }
+    .feedback {
+        width: 100%;
+    }
+
+</style>
+
 <body>
     <div class="before_practice">
-<!--        <p>In each trial you will see two values (gains and losses) that will periodically appear on the screen.</p>-->
-<!--        <p>These values are Experimental Currency Unit (ECU). 1 ECU = 0.19 EUR. </p>-->
-<!--        <p>You have an equal chance (50%) to either win the gain value or loose the loss value. The loss value has the "-" sign.</p>-->
-<!--        <p>Your task is to make a decision after the presentation of the values.</p>-->
-<!--        <p>Press <b>"↑" (upwards arrow)</b> to accept the gamble or <b>"↓" (downwards arrow)</b> to reject it.</p>-->
-<!--        <p>In the end of the experiment, <b>only one</b> trial where you have accepted the gamble will affect your final payoff, which also includes unconditional 10 EUR.</p>-->
-<!--        <p>The first {{Constants.num_practice_rounds}} trials are for practice so you will not gain or lose any money.</p>-->
-        <p>In each trial you will see two values that will periodically appear on the screen. One of these values will be the potential loss (it will have the "-" sign), another one - potential gain. You will have an equal chance (50%) to either win the potential gain or loose the potential loss.</p>
-        <p>In every trial, after the demonstration of the values, you will need to make a decision whether you accept or reject the gamble with these values. Using your keyboard, press <b>"↑" (upwards arrow)</b> to accept the gamble or <b>"↓" (downwards arrow)</b> to reject it.</p>
-        <p>At the end of the experiment, <b>only one</b> accepted trial will affect your final payoff, which will also include unconditional 10 EUR. This trial will be chosen randomly from all the trials that you accepted. The first {{Constants.num_practice_rounds}} trials are for training so they will not affect your final payoff.</p>
-        <p>Values that you will see are in the Experimental Currency Units (ECU). 1 ECU = 0.19 EUR.</p>
-        <h4 style="margin-top: 50px">Please, answer the following questions before proceeding:</h4>
-        <form>
-          <label for="q1">What button should you press to accept the gamble?</label>
-          <input type="text" id="q1" name="q1"><br><br>
-          <label for="q2">How many accepted gambles will affect your final payoff?</label>
-          <input id="q2" name="q2"><br><br>
-        </form>
+        <p>In the following study you are about to make decisions of whether to accept a lottery or not. These lotteries
+            will give you with equal probabilities (fifty-fifty) a positive or negative outcome. You are going to choose
+            whether to accept or reject one a total of 24 different lotteries. The overall duration of the study should
+            be of no more than 10-15 minutes. Each outcome in these lotteries consists of a positive or negative amount
+            of points (1 point = 0.19 EUR). In the end, one of these lotteries will be randomly chosen and added
+            (or subtracted) to your initial show-up fee, that you received for participating in this study.</p>
+        <p>In each trial, the lottery will be presented by showing you each outcome separately one to three times, in an alternating matter. </p>
+        <table>
+                <tr>
+                    <td class="gifs">
+                        <h4>One time per outcome</h4>
+                        <img src="{% static 'global/experiment_pics/gif one time per outcome.gif' %}">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="gifs">
+                        <h4>Two to three times per outome</h4>
+                        <img src="{% static 'global/experiment_pics/gif two to three times per outome.gif' %}">
+                    </td>
+                </tr>
+        </table>
+        <p>After seeing the outcomes, we will ask you whether you would accept or reject this lottery. If you wish <u style="color:MediumSeaGreen;">to accept</u>,
+            then press the <b style="color:MediumSeaGreen;">upwards key (↑)</b>. In case you want <u style="color:Tomato;">to reject</u>, press the <b style="color:Tomato;">downward key (↓)</b>.
+            Once you have made your decision, you will see it on your screen. You will have 6 seconds to make a decision.
+            In case you don't answer within 6 seconds, we will ask you to answer faster, and if that trial gets selected
+            in the end, you will get the negative outcome for certain. </p>
+        <table>
+            <tr>
+                <td><h4>Accepted gambles</h4></td>
+                <td><h4>Rejected gambles</h4></td>
+                <td><h4>Timeout</h4></td>
+            </tr>
+            <tr>
+                <td><img class="feedback" src="{% static 'global/experiment_pics/accepted.png' %}"></td>
+                <td><img class="feedback" src="{% static 'global/experiment_pics/rejected.png' %}"></td>
+                <td><img class="feedback" src="{% static 'global/experiment_pics/faster.png' %}"></td>
+            </tr>
+        </table>
+        <h4 style="margin-top: 50px">Questions</h4>
+        <p>Now we will ask you a couple of questions regarding the instructions in order to see
+            if you understood correctly. After, we will show you 3 practice trials  for you to get used to the process.
+            After we will notify you and the real decisions will start. </p>
+
+        {% formfield player.q1 %}
+        {% formfield player.q2 %}
+        {% formfield player.q3 %}
+        {% formfield player.q4 %}
     </div>
-    <div class="after_practice">
-        <p>Good job!</p>
-        <p>Now the real trials will begin.</p>
-        <p>Remember to press <b>"↑" (upwards arrow)</b> to accept the gamble or <b>"↓" (downwards arrow)</b> to reject it.</p>
-        <p>Good luck!</p>
-    </div>
+
 <input type="hidden" id="rand_int" name="rand_int"/>
 </body>
 <script>
     var rand_int = Math.floor(Math.random() * 1000)
     $("#rand_int").val(rand_int);
-    {% if instruction_type == 0 %}
-    $(".after_practice").hide();
-    {% else %}
-    $(".before_practice").hide()
-    $("#q1").val("None");
-    $("#q2").val("None");
-    {% endif %}
 </script>
     {% next_button %}
 

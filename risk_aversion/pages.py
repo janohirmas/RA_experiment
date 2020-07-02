@@ -5,7 +5,7 @@ from .models import Constants
 
 class Instructions(Page):
     form_model = 'player'
-    form_fields = ['rand_int', 'q1', 'q2']
+    form_fields = ['rand_int', 'q1', 'q2', 'q3', 'q4']
     def vars_for_template(self):
         if self.round_number == 1:
             instruction_type = 0
@@ -14,13 +14,17 @@ class Instructions(Page):
         return dict (
             instruction_type = instruction_type
         )
-
-
     def is_displayed(self):
-        if (self.round_number == 1) or (self.round_number == Constants.num_practice_rounds+1):
+        if self.round_number == 1:
             return True
+    def error_message(self, values):
+        if (values['q1'] != "24") or (values['q2'] != "1") or (values['q3'] != 1) or (values['q4'] != 2) and (self.round_number == 1):
+            return 'Some of your answers contain an error'
 
-
+class Instructions2(Page):
+    def is_displayed(self):
+        if self.round_number == Constants.num_practice_rounds + 1:
+            return True
 
 class Trial(Page):
     def vars_for_template(self):
@@ -53,7 +57,7 @@ class Trial(Page):
         )
 class Decision(Page):
     form_model = 'player'
-    form_fields = ['decision', 'gamble_result', 'decision_time_ms']
+    form_fields = ['decision', 'decision_time_ms']
     # def js_vars(self):
     #     if self.round_number > 1:
     #         current_ecu = self.player.in_round(self.round_number - 1).ECU
@@ -82,4 +86,4 @@ class Results(Page):
         return self.round_number == Constants.num_rounds
 
 
-page_sequence = [Instructions, Trial, Decision, Results]
+page_sequence = [Instructions, Instructions2, Trial, Decision, Results]

@@ -12,18 +12,18 @@ from otree.api import (
 import pandas as pd
 import random
 
-author = 'Your name here'
+author = 'Evgeny Vasilets'
 
 doc = """
-Your app description
+This is the experiment investigating the nature of risk-aversion.
 """
 
 
 class Constants(BaseConstants):
     name_in_url = 'risk_aversion'
     players_per_group = None
-    num_trial_rounds = 108
-    num_practice_rounds = 5
+    num_trial_rounds = 24
+    num_practice_rounds = 3
     num_rounds = num_trial_rounds + num_practice_rounds
 
 
@@ -36,18 +36,45 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
-    q1 = models.LongStringField()
-    q2 = models.LongStringField()
+# variables that are saved for each participant
+    # anwers to the questions in the instructions
+    q1 = models.StringField(label="How many decisions are you going to make (without counting the practice trials)?", blank = True)
+    q2 = models.StringField(label = "How many outcomes will affect your payment?", blank = True)
+    q3 = models.IntegerField(
+        label="To accept a lottery, you need to press:",
+        choices=[
+            [1, '↑'],
+            [2, '↓']
+        ],
+        blank = True
+    )
+    q4 = models.IntegerField(
+        label="Can the lottery, selected in the end, come from the first 3 trials?",
+        choices=[
+            [1, 'Yes'],
+            [2, 'No']
+        ],
+        blank = True
+    )
+    # random generated int that defines randomisation order for each participant
     rand_int = models.IntegerField()
     cluster = models.IntegerField()
+    # number of a trial in a non-randomised data-frame
     original_trial_num = models.IntegerField()
+    # 1 = accepted, 0 = rejected
     decision = models.IntegerField(blank=True)
+    # -1 - smaller, 0 - equal, 1 - larger
     last_fix_condition = models.IntegerField()
+    # gain or loss
     first_fix_value = models.StringField()
+    # gain or loss
     last_fix_value = models.StringField()
+    # 2,3, 4 or 5
     number_of_fixations = models.IntegerField()
+    # values in ECU
     lose_value = models.IntegerField()
     gain_value = models.IntegerField()
+    # time per each fixation for losses and gains (if the number of fixations is smaller than 5,
     lose_time_1 = models.FloatField()
     lose_time_2 = models.FloatField()
     lose_time_3 = models.FloatField()
@@ -58,17 +85,24 @@ class Player(BasePlayer):
     gain_time_3 = models.FloatField()
     gain_time_4 = models.FloatField()
     gain_time_5 = models.FloatField()
+    # binary: 0 - real trials, 1 - training trials
     practice_trial = models.IntegerField()
-    gamble_result = models.IntegerField(blank=True)
+    # win or lose
     row_number = models.IntegerField()
+    # how much a participant wins/loses
     lottery_result = models.IntegerField(blank=True)
+    # time per decision in ms
     decision_time_ms = models.IntegerField(blank= True)
+    # write down gains and loss conditions (high or low)
+    gain_condition = models.StringField()
+    loss_condition = models.StringField()
 
     def lottery(self):
+    # this function defines how ,uch a participant wins or loses at the end of the experiment.
         values = []
         for ind in range(Constants.num_rounds):
             rnd_num = ind+1
-            if (self.in_round(rnd_num).decision.lower() == "a") & (self.in_round(rnd_num).practice_trials() == 0):
+            if (self.in_round(rnd_num).decision == 1) & (self.in_round(rnd_num).practice_trials() == 0):
                 win_value = random.choice([self.in_round(rnd_num).gain_value, self.in_round(rnd_num).lose_value])
                 values.append(win_value)
         if not values:
@@ -88,31 +122,47 @@ class Player(BasePlayer):
             'number_of_fixations': [],
             'lose_value': [],
             'gain_value': [],
+            'gain_condition':[],
+            'loss_condition':[],
             'lose_times': [],
             'gain_times': [],
         }
-        # treatments table
+
+
         clusters = [0, 1]  # 0 - fast scanning (1 or 2 fixations), 1 - long fixations (3,4 or 5 fix)
         last_fix_conditions = [-1, 0, 1]  # -1 - shorter, 0 - equal, 1 - longer
-        lose_values = [-13, -19, -27]
-        gain_values = [20, 30, 38]
-        last_fix_values = ['gain', 'loss']
+        low_losses = list(range(-13, -21, -1))
+        high_losses = list(range(-21, -28, -1))
+        losses_lists = [high_losses, low_losses]
+
+        low_gains = list(range(20, 29, 1))
+        high_gains = list(range(29, 39, 1))
+        gains_lists = [low_gains, high_gains]
         trial_time_clus0 = 1.365
         trial_time_clus1 = 2.110
         # what is (in %) the last fixation difference is?
         last_fix_larger_by = .2
         count = 1
+        # use for loop to create all combinations of treatments
         for clus in clusters:
             for last_fix_condition in last_fix_conditions:
-                for last_fix_val in last_fix_values:
-                    for gain in gain_values:
-                        for lose in lose_values:
+                    for gains in gains_lists:
+                        for losses in losses_lists:
+                            gain = random.choice(gains)
+                            lose = random.choice(losses)
                             treatments_dic['original_trial_num'].append(count)
                             treatments_dic['cluster'].append(clus)
                             treatments_dic['last_fix_condition'].append(last_fix_condition)
-                            treatments_dic['last_fix_value'].append(last_fix_val)
                             treatments_dic['lose_value'].append(lose)
                             treatments_dic['gain_value'].append(gain)
+                            if gains == low_gains:
+                                treatments_dic['gain_condition'].append('low_gains')
+                            elif gains == high_gains:
+                                treatments_dic['gain_condition'].append('high_gains')
+                            if losses == high_losses:
+                                treatments_dic['loss_condition'].append('high_losses')
+                            elif losses == low_losses:
+                                treatments_dic['loss_condition'].append('low_losses')
                             if clus == 0:
                                 fix_num = 2
                                 treatments_dic['number_of_fixations'].append(2)
@@ -128,15 +178,20 @@ class Player(BasePlayer):
                             lose_times = []
                             gain_times = []
                             first_value = None
-                            # define whether gains or losses are shown first
-                            if ((fix_num % 2) == 0) & (last_fix_val == 'gain'):
+                            # randomly define whether gains or losses are shown last
+                            last_fixes = ['gain', 'loss']
+                            last_fix_val = random.choice(last_fixes)
+                            treatments_dic['last_fix_value'].append(last_fix_val)
+                            # now define which value will be shown first
+                            if (fix_num % 2 == 0) & (last_fix_val == 'gain'):
                                 first_value = 'loss'
-                            elif ((fix_num % 2) == 0) & (last_fix_val == 'loss'):
+                            elif (fix_num % 2 == 0) & (last_fix_val == 'loss'):
                                 first_value = 'gain'
-                            elif ((fix_num % 2) != 0) & (last_fix_val == 'gain'):
+                            elif (fix_num % 2 != 0) & (last_fix_val == 'gain'):
                                 first_value = 'gain'
-                            elif ((fix_num % 2) != 0) & (last_fix_val == 'loss'):
+                            elif (fix_num % 2 != 0) & (last_fix_val == 'loss'):
                                 first_value = 'loss'
+                            treatments_dic['first_fix_value'].append(first_value)
                             # create arrays that will include all fixation times
                             for time_ind in range(fix_num):
                                 if (first_value == 'gain') & ((time_ind % 2) == 0):
@@ -162,10 +217,6 @@ class Player(BasePlayer):
                             # add the fixation times to the dictionary
                             treatments_dic['lose_times'].append(lose_times)
                             treatments_dic['gain_times'].append(gain_times)
-                            if last_fix_val == 'gain':
-                                treatments_dic['first_fix_value'].append('loss')
-                            else:
-                                treatments_dic['first_fix_value'].append('gain')
                             count += 1
         treatments_df = pd.DataFrame(treatments_dic)
         # randomize the table using random-generated number (which will be the same for all trials for a specific participant)
@@ -180,6 +231,7 @@ class Player(BasePlayer):
             row_number = self.round_number - 1 - Constants.num_practice_rounds
         elif pt == 1:
             row_number = random.randrange(0, len(randomized))
+        # write down the data for the participant for each row so we can see it during the data analysis
         self.original_trial_num = randomized.loc[row_number, 'original_trial_num']
         self.cluster = randomized.loc[row_number, 'cluster']
         self.lose_value = randomized.loc[row_number, 'lose_value']
@@ -189,6 +241,8 @@ class Player(BasePlayer):
         self.last_fix_value = randomized.loc[row_number, 'last_fix_value']
         self.number_of_fixations = randomized.loc[row_number, 'number_of_fixations']
         self.row_number = row_number
+        self.gain_condition = randomized.loc[row_number, 'gain_condition']
+        self.loss_condition = randomized.loc[row_number, 'loss_condition']
         # Create distinct variables for all fix times
         row_gain_times = randomized.loc[row_number, 'gain_times']
         row_lose_times = randomized.loc[row_number, 'lose_times']
@@ -207,10 +261,12 @@ class Player(BasePlayer):
             exec("self.%s = %f" % (var, gain_fix_time))
         return randomized
     def practice_trials(self):
+        # this function defines whether these trials are training or real
         if self.round_number > Constants.num_practice_rounds:
-            return 0
             self.practice_trial = 0
+            return 0
         else:
-            return 1
             self.practice_trial = 1
+            return 1
+
 
