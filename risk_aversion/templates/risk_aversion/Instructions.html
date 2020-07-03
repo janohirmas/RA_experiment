@@ -2,7 +2,7 @@
 {% load otree static %}
 
 {% block title %}
-    Instructions
+<p style="text-align: center;">Instructions</p>
 {% endblock %}
 
 {% block content %}
@@ -12,6 +12,18 @@
     }
     .feedback {
         width: 100%;
+    }
+    .before_practice {
+        text-align: justify;
+        text-justify: inter-word;
+    }
+
+    .centered {
+        text-align: center;
+    }
+    table {
+        margin-left: auto;
+        margin-right: auto;
     }
 
 </style>
@@ -25,7 +37,7 @@
             of points (1 point = 0.19 EUR). In the end, one of these lotteries will be randomly chosen and added
             (or subtracted) to your initial show-up fee, that you received for participating in this study.</p>
         <p>In each trial, the lottery will be presented by showing you each outcome separately one to three times, in an alternating matter. </p>
-        <table>
+        <table class="centered">
                 <tr>
                     <td class="gifs">
                         <h4>One time per outcome</h4>
@@ -45,7 +57,7 @@
             In case you don't answer within 6 seconds, we will ask you to answer faster, and if that trial gets selected
             in the end, you will get the negative outcome for certain. </p>
         <table>
-            <tr>
+            <tr class="centered">
                 <td><h4>Accepted gambles</h4></td>
                 <td><h4>Rejected gambles</h4></td>
                 <td><h4>Timeout</h4></td>
@@ -56,7 +68,7 @@
                 <td><img class="feedback" src="{% static 'global/experiment_pics/faster.png' %}"></td>
             </tr>
         </table>
-        <h4 style="margin-top: 50px">Questions</h4>
+        <h4 class="centered" style="margin-top: 50px">Questions</h4>
         <p>Now we will ask you a couple of questions regarding the instructions in order to see
             if you understood correctly. After, we will show you 3 practice trials  for you to get used to the process.
             After we will notify you and the real decisions will start. </p>

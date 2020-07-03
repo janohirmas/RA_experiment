@@ -74,6 +74,9 @@ class Decision(Page):
 class ResultsWaitPage(WaitPage):
     pass
 
+class Middle_page(Page):
+    def is_displayed(self):
+        return self.round_number == Constants.num_practice_rounds + (Constants.num_trial_rounds//2)
 
 class Results(Page):
     form_model = 'player'
@@ -86,4 +89,4 @@ class Results(Page):
         return self.round_number == Constants.num_rounds
 
 
-page_sequence = [Instructions, Instructions2, Trial, Decision, Results]
+page_sequence = [Instructions, Instructions2, Trial, Decision, Middle_page, Results]

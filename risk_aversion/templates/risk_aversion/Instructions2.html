@@ -2,19 +2,31 @@
 {% load otree static %}
 
 {% block title %}
-    Instructions
 {% endblock %}
 
 {% block content %}
+<style>
+    body {
+        background-color: black;
+        color: white;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+        text-align: center;
+        font-size: calc((1em + 1vw)*.5);
+    }
 
+
+
+</style>
 
 <body>
 
-    <div class="after_practice">
-        <p>Good job!</p>
-        <p>Now the real trials will begin.</p>
+    <div>
+        <p>Good job! Now the real trials will begin.</p>
         <p>Remember to press <b>"↑" (upwards arrow)</b> to accept the gamble or <b>"↓" (downwards arrow)</b> to reject it.</p>
-        <p>Good luck!</p>
     </div>
 </body>
 
