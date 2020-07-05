@@ -26,6 +26,10 @@ class Instructions2(Page):
         if self.round_number == Constants.num_practice_rounds + 1:
             return True
 
+class Attention(Page):
+    def is_displayed(self):
+        return self.round_number == 1
+            
 class Trial(Page):
     def vars_for_template(self):
         randomized_table = self.player.treatments_player()
@@ -89,4 +93,4 @@ class Results(Page):
         return self.round_number == Constants.num_rounds
 
 
-page_sequence = [Instructions, Instructions2, Trial, Decision, Middle_page, Results]
+page_sequence = [Instructions, Instructions2, Attention, Trial, Decision, Middle_page, Results]
