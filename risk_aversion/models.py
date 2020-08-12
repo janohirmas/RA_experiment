@@ -15,14 +15,14 @@ import random
 author = 'Evgeny Vasilets'
 
 doc = """
-This is the experiment investigating the nature of risk-aversion.
+This is the experiment investigating the nature of loss-aversion.
 """
 
 
 class Constants(BaseConstants):
     name_in_url = 'risk_aversion'
     players_per_group = None
-    num_trial_rounds = 24
+    num_trial_rounds = 48
     num_practice_rounds = 3
     num_rounds = num_trial_rounds + num_practice_rounds
 
@@ -37,7 +37,16 @@ class Group(BaseGroup):
 
 class Player(BasePlayer):
 # variables that are saved for each participant
-    # anwers to the questions in the instructions
+    # demographic questions
+    demography_age = models.IntegerField(label="Your age")
+    demography_country = models.StringField(label="What country do you live in now?")
+    demography_gender = models.IntegerField( label="What is your gender?", choices=[
+        [1, 'Male'],
+        [2, 'Female'],
+        [3, 'Other'],
+    ])
+
+    # anwers to the questions checking the understanding of instructions
     q1 = models.StringField(label="How many decisions are you going to make (without counting the practice trials)?", blank = True)
     q2 = models.StringField(label = "How many outcomes will affect your payment?", blank = True)
     q3 = models.IntegerField(
@@ -138,86 +147,92 @@ class Player(BasePlayer):
         low_gains = list(range(20, 29, 1))
         high_gains = list(range(29, 39, 1))
         gains_lists = [low_gains, high_gains]
+        last_fixes = ['gain', 'loss']
         trial_time_clus0 = 1.365
         trial_time_clus1 = 2.110
         # what is (in %) the last fixation difference is?
-        last_fix_larger_by = .2
+        last_fix_larger_by = .25
         count = 1
         # use for loop to create all combinations of treatments
         for clus in clusters:
             for last_fix_condition in last_fix_conditions:
                     for gains in gains_lists:
                         for losses in losses_lists:
-                            gain = random.choice(gains)
-                            lose = random.choice(losses)
-                            treatments_dic['original_trial_num'].append(count)
-                            treatments_dic['cluster'].append(clus)
-                            treatments_dic['last_fix_condition'].append(last_fix_condition)
-                            treatments_dic['lose_value'].append(lose)
-                            treatments_dic['gain_value'].append(gain)
-                            if gains == low_gains:
-                                treatments_dic['gain_condition'].append('low_gains')
-                            elif gains == high_gains:
-                                treatments_dic['gain_condition'].append('high_gains')
-                            if losses == high_losses:
-                                treatments_dic['loss_condition'].append('high_losses')
-                            elif losses == low_losses:
-                                treatments_dic['loss_condition'].append('low_losses')
-                            if clus == 0:
-                                fix_num = 2
-                                treatments_dic['number_of_fixations'].append(2)
-                                time_per_fix = trial_time_clus0 / fix_num
-                            elif clus == 1:
-                                # define how many fixations will there be
-                                fix_num = random.randint(3, 5)
-                                treatments_dic['number_of_fixations'].append(fix_num)
-                                time_per_fix = trial_time_clus1 / fix_num
-                            # compute lose and gain times
-                            time_per_fix_larger = time_per_fix * (1 + last_fix_larger_by)
-                            time_per_fix_smaller = time_per_fix * (1 - last_fix_larger_by)
-                            lose_times = []
-                            gain_times = []
-                            first_value = None
-                            # randomly define whether gains or losses are shown last
-                            last_fixes = ['gain', 'loss']
-                            last_fix_val = random.choice(last_fixes)
-                            treatments_dic['last_fix_value'].append(last_fix_val)
-                            # now define which value will be shown first
-                            if (fix_num % 2 == 0) & (last_fix_val == 'gain'):
-                                first_value = 'loss'
-                            elif (fix_num % 2 == 0) & (last_fix_val == 'loss'):
-                                first_value = 'gain'
-                            elif (fix_num % 2 != 0) & (last_fix_val == 'gain'):
-                                first_value = 'gain'
-                            elif (fix_num % 2 != 0) & (last_fix_val == 'loss'):
-                                first_value = 'loss'
-                            treatments_dic['first_fix_value'].append(first_value)
-                            # create arrays that will include all fixation times
-                            for time_ind in range(fix_num):
-                                if (first_value == 'gain') & ((time_ind % 2) == 0):
-                                    gain_times.append(time_per_fix)
-                                elif (first_value == 'loss') & ((time_ind % 2) == 0):
-                                    lose_times.append(time_per_fix)
-                                elif (first_value == 'gain') & ((time_ind % 2) != 0):
-                                    lose_times.append(time_per_fix)
-                                elif (first_value == 'loss') & ((time_ind % 2) != 0):
-                                    gain_times.append(time_per_fix)
-                                # check if this is the last fix
-                                if time_ind == fix_num - 1:
-                                    if last_fix_condition == 1:
-                                        if last_fix_val == 'gain':
-                                            gain_times[-1] = time_per_fix_larger
-                                        elif last_fix_val == 'loss':
-                                            lose_times[-1] = time_per_fix_larger
-                                    elif last_fix_condition == -1:
-                                        if last_fix_val == 'gain':
-                                            gain_times[-1] = time_per_fix_smaller
-                                        elif last_fix_val == 'loss':
-                                            lose_times[-1] = time_per_fix_smaller
-                            # add the fixation times to the dictionary
-                            treatments_dic['lose_times'].append(lose_times)
-                            treatments_dic['gain_times'].append(gain_times)
-                            count += 1
+                            for last_fix_val in last_fixes:
+                                gain = random.choice(gains)
+                                lose = random.choice(losses)
+                                treatments_dic['original_trial_num'].append(count)
+                                treatments_dic['cluster'].append(clus)
+                                treatments_dic['last_fix_condition'].append(last_fix_condition)
+                                treatments_dic['lose_value'].append(lose)
+                                treatments_dic['gain_value'].append(gain)
+                                if gains == low_gains:
+                                    treatments_dic['gain_condition'].append('low_gains')
+                                elif gains == high_gains:
+                                    treatments_dic['gain_condition'].append('high_gains')
+                                if losses == high_losses:
+                                    treatments_dic['loss_condition'].append('high_losses')
+                                elif losses == low_losses:
+                                    treatments_dic['loss_condition'].append('low_losses')
+                                if clus == 0:
+                                    fix_num = 2
+                                    treatments_dic['number_of_fixations'].append(2)
+                                    time_per_fix = trial_time_clus0 / fix_num
+                                elif clus == 1:
+                                    # define how many fixations will there be
+                                    fix_num = random.randint(3, 5)
+                                    treatments_dic['number_of_fixations'].append(fix_num)
+                                    time_per_fix = trial_time_clus1 / fix_num
+                                # compute lose and gain times
+                                time_per_fix_larger = time_per_fix * (1 + last_fix_larger_by)
+                                time_per_fix_smaller = time_per_fix * (1 - last_fix_larger_by)
+                                lose_times = []
+                                gain_times = []
+                                first_value = None
+
+                                # define whether gains or losses are shown last
+                                treatments_dic['last_fix_value'].append(last_fix_val)
+                                # now define which value will be shown first
+                                if (fix_num % 2 == 0) & (last_fix_val == 'gain'):
+                                    first_value = 'loss'
+                                elif (fix_num % 2 == 0) & (last_fix_val == 'loss'):
+                                    first_value = 'gain'
+                                elif (fix_num % 2 != 0) & (last_fix_val == 'gain'):
+                                    first_value = 'gain'
+                                elif (fix_num % 2 != 0) & (last_fix_val == 'loss'):
+                                    first_value = 'loss'
+                                treatments_dic['first_fix_value'].append(first_value)
+                                # create arrays that will include all fixation times
+                                for time_ind in range(fix_num):
+                                    # check if it's a first fixation to mitigate the reaction delay
+                                    if time_ind == 0:
+                                        time_per_fix = time_per_fix + .165
+                                    if (first_value == 'gain') & ((time_ind % 2) == 0):
+                                        gain_times.append(time_per_fix)
+                                    elif (first_value == 'loss') & ((time_ind % 2) == 0):
+                                        lose_times.append(time_per_fix)
+                                    elif (first_value == 'gain') & ((time_ind % 2) != 0):
+                                        lose_times.append(time_per_fix)
+                                    elif (first_value == 'loss') & ((time_ind % 2) != 0):
+                                        gain_times.append(time_per_fix)
+                                    # substract the error time if this was the first fixation
+                                    if time_ind == 0:
+                                        time_per_fix = time_per_fix - .165
+                                    if time_ind == fix_num - 1:
+                                        if last_fix_condition == 1:
+                                            if last_fix_val == 'gain':
+                                                gain_times[-1] = time_per_fix_larger
+                                            elif last_fix_val == 'loss':
+                                                lose_times[-1] = time_per_fix_larger
+                                        elif last_fix_condition == -1:
+                                            if last_fix_val == 'gain':
+                                                gain_times[-1] = time_per_fix_smaller
+                                            elif last_fix_val == 'loss':
+                                                lose_times[-1] = time_per_fix_smaller
+                                # add the fixation times to the dictionary
+                                treatments_dic['lose_times'].append(lose_times)
+                                treatments_dic['gain_times'].append(gain_times)
+                                count += 1
         treatments_df = pd.DataFrame(treatments_dic)
         # randomize the table using random-generated number (which will be the same for all trials for a specific participant)
         randomized = treatments_df.sample(frac=1, random_state=self.in_round(1).rand_int)
