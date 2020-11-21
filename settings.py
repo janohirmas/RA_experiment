@@ -12,10 +12,10 @@ SESSION_CONFIG_DEFAULTS = dict(
 
 SESSION_CONFIGS = [
     dict(
-        name='risk_aversion',
-        display_name='risk_aversion',
+        name='experiment',
+        display_name='decision_making_experiment',
         num_demo_participants=1,
-        app_sequence=['risk_aversion'],
+        app_sequence=['instructions', 'game', 'questionnaire'],
     )
 ]
 
@@ -28,12 +28,16 @@ REAL_WORLD_CURRENCY_CODE = 'EUR'
 USE_POINTS = True
 
 ROOMS = [
+    # dict(
+    #     name='econ101',
+    #     display_name='Econ 101 class',
+    #     participant_label_file='_rooms/econ101.txt',
+    # ),
     dict(
-        name='econ101',
-        display_name='Econ 101 class',
-        participant_label_file='_rooms/econ101.txt',
+        name='DM_EXP_room',
+        display_name='Econ DM_EXP_room class',
+        # participant_label_file='_rooms/labels.txt',
     ),
-    dict(name='live_demo', display_name='Room for live demo (no participant labels)'),
 ]
 
 ADMIN_USERNAME = 'admin'

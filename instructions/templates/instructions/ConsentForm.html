@@ -1,0 +1,70 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block content %}
+<style>
+    .gifs {
+        padding-bottom:50px;
+    }
+    .feedback {
+        width: 100%;
+    }
+    .before_practice {
+        text-align: justify;
+        text-justify: inter-word;
+    }
+
+    .centered {
+        text-align: center;
+    }
+    table {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .next_button {
+        visibility: hidden
+    }
+</style>
+
+<body>
+<h1 style="text-align: center;">Informed consent</h1>
+    <div class="before_practice">
+        <p>Welcome! You are participating in a study funded by the University of Amsterdam. In this study you will have to make a series of decisions about risk. Depending on your answers you can get a bonus payment.</p>
+        <ul>
+            <li><b>Expected duration:</b> The overall study should last about 20 minutes.</li>
+            <li><b>Requirements:</b> You need to be 18 or older and be able to speak and read English.</li>
+            <li><b>Risks and Benefits:</b>There are no expected risks associated with the participation in this study. Your decisions will affect how much you earn in the end. Aside from the participation fee, you can obtain a bonus payment depending on your decisions. This bonus can go up to 2 pounds.</li>
+            <li><b>Confidentiality:</b> Your decisions and identity will not be revealed to anyone. Moreover, you will be assigned to an identification number and all your decisions will be registered as such. No one will be able to link your decisions to you.</li>
+            <li><b>Voluntary Participation:</b> Your participation in this study is voluntary. You can decide to stop your participation at any time throughout the experiment, but you cannot earn the additional bonus if you do not finish the experiment. You do not need any reason to withdraw from the study.</li>
+            <li><b>Questions:</b> If you have any questions about the experiment, please write to the researcher Alejandro Hirmas at <a href="mailto: a.hirmas@uva.nl" >a.hirmas@uva.nl</a>.</li>
+        </ul>
+    </div>
+<!--{% formfield player.consent %}-->
+<input type="radio" id="agree" name="consent" value="1">
+<label for="agree">I agree to the conditions and want to participate in the study.</label><br>
+<input type="radio" id="disagree" name="consent" value="2">
+<label for="disagree">I do not agree to participate.</label><br>
+<button class="btn btn-primary btn-large" type="button" id="Fake_Button">Next</button>
+<button class="next_button btn btn-primary btn-large" id="Next_Button">Next</button>
+
+</body>
+<script>
+    var Button = document.getElementById("Next_Button");
+    var Fake_Button = document.getElementById("Fake_Button");
+    Fake_Button.onclick = function MyFunction(){
+        if (document.getElementById("disagree").checked){
+            if (window.confirm("Are you sure you do not want to participate in the study? Press OK if you want to deregister.")){
+                    Button.click();
+            }
+        }else if (document.getElementById("agree").checked){
+            Button.click();
+        }
+    };
+
+
+
+
+
+
+</script>
+{% endblock %}

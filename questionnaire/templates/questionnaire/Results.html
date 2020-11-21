@@ -1,0 +1,46 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+    Thank you!
+{% endblock %}
+
+{% block content %}
+
+<p>Trial <var id="round_number_lottery"></var> was selected at random.<span id = "decision_text"> Your decision was to <var id="decision"></var> the lottery.</span> The outcome of the lottery was <var id="ECU_won"></var>. Your bonus payment is <var id="final_prize"></var> pound(s).</p>
+
+<p>Your completion code is <var id="prolific_code"></var>.</p>
+
+<p>Click <a id="proliic_completion_link"></var>here</a> to go back to prolific.</p>
+
+<input type="hidden" id="lottery_result" name="lottery_result"/>
+<input type="hidden" id="round_number_lottery" name="round_number_lottery"/>
+
+<script>
+    var prolific_code = "38FA2EE5"
+    document.getElementById('prolific_code').innerHTML = prolific_code;
+    var partial_link = "https://app.prolific.co/submissions/complete?cc="
+    var proliic_completion_link = partial_link.concat(prolific_code)
+    document.getElementById("proliic_completion_link").setAttribute("href", proliic_completion_link);
+
+    var lottery_result = js_vars.lottery_result;
+    var round_number_lottery = js_vars.round_number_lottery;
+    var decision_in_winning_round = js_vars.decision_in_winning_round;
+    $("#lottery_result").val(lottery_result);
+    $("#round_number_lottery").val(round_number_lottery);
+    document.getElementById('ECU_won').innerHTML = lottery_result.toString();
+    document.getElementById('round_number_lottery').innerHTML = round_number_lottery.toString();
+    var euro_won = (lottery_result + 40) * 0.025;
+    euro_won = euro_won.toFixed(2);
+    document.getElementById('final_prize').innerHTML = euro_won.toString();
+    if (decision_in_winning_round == 2 ) {
+        document.getElementById('decision').innerHTML = "accept";
+    } else if (decision_in_winning_round == 1) {
+        document.getElementById('decision').innerHTML = "reject";
+    } else if (decision_in_winning_round == 0) {
+        document.getElementById('decision_text').innerHTML = " You have not done any decision for this trial.";
+    }
+</script>
+{% endblock %}
+
+

@@ -1,0 +1,71 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block content %}
+<style>
+    .gifs {
+        padding-bottom:50px;
+    }
+    .feedback {
+        width: 100%;
+    }
+    .before_practice {
+        text-align: justify;
+        text-justify: inter-word;
+    }
+
+    .centered {
+        text-align: center;
+        max-width:100%;
+        max-height:100%;
+    }
+
+
+    table {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+</style>
+
+<body>
+<h1 style="text-align: center;">Instructions</h1>
+    <div class="before_practice">
+        <p>Thank you for participating in our experiment on how people react to different trials. The overall duration of the study should be about 20-25 minutes. This experiment uses Experimental Currency Units (ECU). Each ECU is equivalent to 2.5p (0.025 Pounds). You have received an initial <u>Bonus Payment</u> of 40 ECUs. This amount can <i>increase (or decrease)</i> depending on your decisions of this experiment. This <u>bonus payment</u> is additional to your participation fee. </p>
+        <p>In this study, you will be shown 44 different lotteries and will be asked to make decisions about whether you wish to accept each lottery or not. The lotteries, that you will see, offer a <i>positive</i> (<i>Gain</i>) and a <i>negative</i> (<i>Loss</i>) outcome with equal probability (fifty-fifty, same as a coin toss). <i>Gain</i> and <i>Loss</i> amounts will change for each new trial, so consider each lottery carefully before you make a decision. At the end of the experiment, <u>one of the 44 lotteries will be selected at random</u>.</p>
+        <p>If you <b>reject</b> the selected lottery, nothing will happen. If you <b>accept</b> it, one of the outcomes will be played out via a virtual coin flip. If the good state occurs (e.g., heads), the <i>Gains</i> will be <i>added</i> to your initial bonus payment. If the bad state occurs (e.g., tails), the <i>Losses</i> will be <i>subtracted</i> from your bonus payment. Therefore, your decisions in the experiment together with the outcome of the coin flip will determine your bonus payment.</p>
+        <p><b>For example:</b></p>
+        <p>Let's say in the selected lottery (one of the 44), the possible outcomes are 32 (heads) and -20 (tails).</p>
+        <p>If you decide to <b>reject</b>, then, your bonus payment will remain unchanged.</p>
+        <p>If you decide to <b>accept</b>, then a random outcome is determined.</p>
+        <ul>
+            <li>If the random outcome is heads, 32 will be <i>added</i> to your bonus payment.</li>
+            <li>If the random outcome is tails, 20 will be <i>subtract</i>  from your bonus payment.</li>
+        </ul>
+        <p>In each trial, the presentation of the lottery goes as follows. First, you will see a cross in the middle. Then, the outcomes (<i>Gain</i> and <i>Loss</i>) will appear on the screen in alternation (similar to the black screen below). If you wish to <b>accept</b> the lottery, then press the <u>upwards key</u> (↑). In case you want to <b>reject</b>, press the <u>downward key</u> (↓). Once you have made your decision, it will be notified on the screen. You have a maximum of 6 seconds (starting after the cross appeared) to make your decision, so you need to press the key you decided before these 6 seconds. In case you don't answer within 6 seconds, we will ask you to answer faster, and if that trial gets selected in the end, you will get the <i>negative</i> outcome for certain.</p>
+        <div class="centered">
+            <img style='height: 100%; width: 100%; object-fit: contain' src="{% static 'global/experiment_pics/gif_new.gif' %}">
+        </div>
+        <p> </p>
+        <p> After each trial, you will be informed about your decision. Next, we will ask you about your confidence in your decision. You will be presented with a scale that goes from 1 to 7 (See picture below). The scale will have a marker (green bar). You can move the marker to the left by pressing the <u>left key (←)</u> and you can move it to the right by pressing <u>right key (→)</u>. Once you have placed the marker in the confidence level you want to select, then you need to press the <u>Enter key</u> or the <u>letter A</u> to accept. After you have selected your confidence level, the next trial will begin. </p>
+        <div class="centered">
+            <img style='height: 100%; width: 100%; object-fit: contain' src="{% static 'global/experiment_pics/confdence.png' %}">
+        </div>
+        <h4 class="centered" style="margin-top: 50px">Questions</h4>
+        <p>Now we will ask you a couple of questions regarding the instructions in order to see if you understood correctly. After, we will show you 3 practice trials for you to get used to making decisions in the current experiment. The decisions on the next 3 trials will not count toward the final payment, they are simply there for you to try out how to make decisions in this experiment. </p>
+        <p>After you completed the practice trials, we will notify you and  the actual experiment will start, with decisions that can count towards your final payout. After you finish all the trials, a short survey will be presented. Once you finish the survey, the random trial will be selected and your bonus payment will be calculated.</p>
+
+        {% formfield player.q1 %}
+        {% formfield player.q2 %}
+        {% formfield player.q3 %}
+        {% formfield player.q4 %}
+    </div>
+
+<input type="hidden" id="rand_int" name="rand_int"/>
+</body>
+<script>
+    var rand_int = Math.floor(Math.random() * 1000)
+    $("#rand_int").val(rand_int);
+</script>
+    {% next_button %}
+{% endblock %}
